@@ -1,0 +1,58 @@
+
+<div class="form container">
+
+  <%= form_for @todo do |f| %>
+    <div class="form-group">
+      <%= f.label :title, "Title"  ,class: "label-control"%>
+      <% if @todo.errors[:title].present? %>
+        <span>
+          <%= "#{@todo.errors[:title].join}" %>
+        </span>
+      <% end %>
+      <%= f.text_field :title, class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%= f.label :note, "Note" ,class: "label-control"%>
+      <% if @todo.errors[:note].present? %>
+        <span>
+          <%= "#{@todo.errors[:note].join}" %>
+        </span>
+      <% end %>
+      <%= f.text_field :note ,class: "form-control"%>    
+    </div>
+
+    <div class="form-group">
+      <%= f.label :due_date, "Due date" ,class: "label-control"%>
+        <% if @todo.errors[:due_date].present? %>
+        <span>
+          <%= "#{@todo.errors[:due_date].join}" %>
+        </span>
+      <% end %>
+      <div class='input-group date' id='datetimepicker1'>
+        <%= f.text_field :due_date, class: "form-control"%> 
+        <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :due_time, "Due time" ,class: "label-control"%>
+        <% if @todo.errors[:due_time].present? %>
+        <span>
+          <%= "#{@todo.errors[:due_time].join}" %>
+        </span>
+      <% end %>
+      <div class='input-group date' id='datetimepicker3'>
+        <%= f.text_field :due_time, class: "form-control"%> 
+        <span class="input-group-addon">
+          <span class="glyphicon glyphicon-time"></span>
+        </span>
+      </div>
+    </div>
+    <div >
+        <%= f.check_box :check_box, checked: false, style: 'visibility: hidden' %>
+    </div>
+    <%= link_to 'Cancel', todos_path, class: "btn btn-danger" %> <%= f.submit class: "btn btn-primary"%>
+  <% end %>
+</div>

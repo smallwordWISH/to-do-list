@@ -1,0 +1,128 @@
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+      <title>To do list</title>
+
+      <% stylesheet_link_tag 'application', media:"all" %>
+      
+    </head>
+  <body>
+      <div class="nav container-fluid col-xs-12 col-sm-12  col-md-offset-2 col-md-9 col-lg-offset-2 col-lg-9"> 
+        <div id="to-do-list-title" class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+          To Do List
+        </div>
+        <div id="new-todo" class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+          <%= link_to '', new_todo_path, class: "plus-sign btn btn-circle-sm btn-primary glyphicon glyphicon-plus" %>
+        </div>
+      </div>
+      <div id="index-container" class="container-fluid col-xs-12 col-sm-12  col-md-offset-2 col-md-8 col-md-offset-2 col-lg-8">
+<!--         <div class="table-responsive"> -->
+          <table id="main-table" class="table table-hover  col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <% same_date = 0 %>
+          <% todo_array = @todos.to_a %>
+          <% for i in 0...todo_array.length %>
+            <% if todo_array[i].due_date != same_date %>
+              <tr class="no-hover">
+                <th class="date-lbl" colspan="6">
+                  
+                  <span class="date-each" ><%= todo_array[i].due_date.strftime('%d') %></span>
+                  <span class="year-month-each">&nbsp;&nbsp;<%= todo_array[i].due_date.strftime('%B %Y') %></span>
+                  <span class="day-each">&nbsp;&nbsp;<%= todo_array[i].due_date.strftime('%a')%><span>
+                  <span ><%= button_tag '', class: "drop-down-btn btn-sm glyphicon glyphicon-triangle-bottom"%></span>
+                </th>
+              </tr>
+              <tr>
+                <td class="check-lbl col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                  <div class="checkbox checkbox-success"> 
+                    <%= check_box_tag 'checkbox3' , todo_array[i].check_box, todo_array[i].check_box, onchange: "$(this).data('params', 'check_box=' + this.checked)", data: { url: url_for(action: 'complete', id: todo_array[i].id ), remote: true, method: :patch }, class: "styled" %>
+                    <%= label_tag '' %>
+                  </div>
+                </td>
+                <td class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                  <span class="title-lbl"><%= todo_array[i].title %></span><br>
+                  <span class="note-lbl"><%= todo_array[i].note %></span>
+                </td>
+                <td class="due-time-lbl col-xs-2 col-sm-2 col-md-2 col-lg-2"><%= todo_array[i].due_time.strftime('%H:%M') %></td>
+                <td class="show-lbl col-xs-1 col-sm-1 col-md-1 col-lg-1 "><%= link_to '', todo_path(todo_array[i]), class: "btn glyphicon glyphicon-list"%></td>
+                <td class="edit-lbl col-xs-1 col-sm-1 col-md-1 col-lg-1 " ><%= link_to '', edit_todo_path(todo_array[i]), class: "btn glyphicon glyphicon-pencil" %></td>
+
+                <% if todo_array[i].due_date.strftime("%Y-%m-%d") < Time.new.strftime("%Y-%m-%d") %>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" align="center"><span class="glyphicon glyphicon-trash"></span></td>
+                <% else %>
+                  <% if todo_array[i].due_date.strftime('%d %B %Y %a') == Time.new.strftime('%d %B %Y %a') && todo_array[i].due_time.strftime('%H:%M')< Time.new.strftime('%H:%M')%>
+                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" align="center"><span class="glyphicon glyphicon-trash"></span></td>
+                  <% else %>
+                    <td class="destroy-lbl col-xs-1 col-sm-1 col-md-1 col-lg-1"><%= link_to "", todo_path(todo_array[i]), method: :delete, data:{ confirm: "Are you sure?"}, class: "btn glyphicon glyphicon-trash" %></td>
+                  <% end %> 
+                <% end %>
+              </tr>
+              <% same_date = todo_array[i].due_date %>  
+          
+            <% else %>
+
+              <% if i < (todo_array.length - 1) %>
+                  <tr>
+              <td class="check-lbl col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                  <div class="checkbox checkbox-success"> 
+                    <%= check_box_tag 'checkbox3' , todo_array[i].check_box, todo_array[i].check_box, onchange: "$(this).data('params', 'check_box=' + this.checked)", data: { url: url_for(action: 'complete', id: todo_array[i].id ), remote: true, method: :patch }, class: "styled" %>
+                    <%= label_tag '' %>
+                  </div>
+                </td>
+                <td class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                  <span class="title-lbl"><%= todo_array[i].title %></span><br>
+                  <span class="note-lbl"><%= todo_array[i].note %></span>
+                </td>
+                <td class="due-time-lbl col-xs-2 col-sm-2 col-md-2 col-lg-2"><%= todo_array[i].due_time.strftime('%H:%M') %></td>
+                <td class="show-lbl col-xs-1 col-sm-1 col-md-1 col-lg-1 "><%= link_to '', todo_path(todo_array[i]), class: "btn glyphicon glyphicon-list"%></td>
+                <td class="edit-lbl col-xs-1 col-sm-1 col-md-1 col-lg-1 " ><%= link_to '', edit_todo_path(todo_array[i]), class: "btn glyphicon glyphicon-pencil" %></td>
+
+                <% if todo_array[i].due_date.strftime("%Y-%m-%d") < Time.new.strftime("%Y-%m-%d") %>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" align="center"><span class="glyphicon glyphicon-trash"></span></td>
+                <% else %>
+                  <% if todo_array[i].due_date.strftime('%d %B %Y %a') == Time.new.strftime('%d %B %Y %a') && todo_array[i].due_time.strftime('%H:%M')< Time.new.strftime('%H:%M')%>
+                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" align="center"><span class="glyphicon glyphicon-trash"></span></td>
+                  <% else %>
+                    <td class="destroy-lbl col-xs-1 col-sm-1 col-md-1 col-lg-1"><%= link_to "", todo_path(todo_array[i]), method: :delete, data:{ confirm: "Are you sure?"}, class: "btn glyphicon glyphicon-trash" %></td>
+                  <% end %> 
+                <% end %> 
+                  </tr>
+                  <% same_date = todo_array[i].due_date %>   
+
+              <% else %>
+                <tr>
+              <td class="check-lbl col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                  <div class="checkbox checkbox-success"> 
+                    <%= check_box_tag 'checkbox3' , todo_array[i].check_box, todo_array[i].check_box, onchange: "$(this).data('params', 'check_box=' + this.checked)", data: { url: url_for(action: 'complete', id: todo_array[i].id ), remote: true, method: :patch }, class: "styled" %>
+                    <%= label_tag '' %>
+                  </div>
+                </td>
+                <td class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                  <span class="title-lbl"><%= todo_array[i].title %></span><br>
+                  <span class="note-lbl"><%= todo_array[i].note %></span>
+                </td>
+                <td class="due-time-lbl col-xs-2 col-sm-2 col-md-2 col-lg-2"><%= todo_array[i].due_time.strftime('%H:%M') %></td>
+                <td class="show-lbl col-xs-1 col-sm-1 col-md-1 col-lg-1 "><%= link_to '', todo_path(todo_array[i]), class: "btn glyphicon glyphicon-list"%></td>
+                <td class="edit-lbl col-xs-1 col-sm-1 col-md-1 col-lg-1 " ><%= link_to '', edit_todo_path(todo_array[i]), class: "btn glyphicon glyphicon-pencil" %></td>
+
+                <% if todo_array[i].due_date.strftime("%Y-%m-%d") < Time.new.strftime("%Y-%m-%d")%>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" align="center"><span class="glyphicon glyphicon-trash"></span></td>
+                <% else %>
+                  <% if todo_array[i].due_date.strftime('%d %B %Y %a') == Time.new.strftime('%d %B %Y %a') && todo_array[i].due_time.strftime('%H:%M')< Time.new.strftime('%H:%M')%>
+                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" align="center"><span class="glyphicon glyphicon-trash"></span></td>
+                  <% else %>
+                    <td class="destroy-lbl col-xs-1 col-sm-1 col-md-1 col-lg-1"><%= link_to "", todo_path(todo_array[i]), method: :delete, data:{ confirm: "Are you sure?"}, class: "btn glyphicon glyphicon-trash" %></td>
+
+                  <% end %> 
+                <% end %> 
+                </tr>        
+              <% end %>
+
+            <% end %>
+          
+          <% end %>
+        </table>
+      </div>
+<!--     </div> -->
+  </body>
